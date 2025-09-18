@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptReverb: Multimodal Room Impulse Response Generation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Header */
+        .header {
+            padding: 150px 0 100px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        /* Sample Grid */
+        .sample-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .sample-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .sample-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .sample-content {
+            padding: 1.5rem;
+        }
+
+        .sample-prompt {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .audio-section {
+            margin: 1rem 0;
+        }
+
+        .audio-label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Architecture Section */
+        .architecture-diagram {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .pipeline-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .pipeline-step {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .pipeline-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        /* Code Section */
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 2rem;
+            border-radius: 15px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .metric-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .sample-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline-flow {
+                flex-direction: column;
+            }
+
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-wave-square"></i> PromptReverb
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#samples">Samples</a></li>
+                <li><a href="#method">Method</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#code">Code</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header id="home" class="header">
+        <div class="container">
+            <h1 class="fade-in">PromptReverb</h1>
+            <p class="fade-in">Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching</p>
+            <div class="cta-buttons fade-in">
+                <a href="#samples" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Listen to Samples
+                </a>
+                <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-secondary" target="_blank">
+                    <i class="fab fa-github"></i> View Code
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                    </div>
+                    <h3>Two-Stage Architecture</h3>
+                    <p>VAE for band-limited to full-band upsampling (48 kHz) combined with conditional diffusion transformer for text-to-RIR generation</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3>Rectified Flow Matching</h3>
+                    <p>Advanced flow-based generation with proper ODE integration using DiT architecture for high-quality reverb synthesis</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Natural Language Control</h3>
+                    <p>First method to synthesize complete RIRs from free-form textual descriptions using T5-based text encoding</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Superior Accuracy</h3>
+                    <p>Achieves 8.8% mean RT60 error compared to -37% for Image2Reverb baseline with realistic acoustic parameters</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Samples Section -->
+    <section id="samples" class="section">
+        <div class="container">
+            <h2 class="section-title">Audio Samples</h2>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem;">
+                Compare our PromptReverb method with Image2Reverb and ground truth recordings across diverse acoustic environments
+            </p>
+            
+            <div class="sample-grid" id="sampleGrid">
+                <!-- Samples will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Method Section -->
+    <section id="method" class="section">
+        <div class="container">
+            <h2 class="section-title">Method Overview</h2>
+            
+            <div class="architecture-diagram">
+                <h3 style="text-align: center; margin-bottom: 2rem;">PromptReverb Architecture</h3>
+                <div class="pipeline-flow">
+                    <div class="pipeline-step">Text Input</div>
+                    <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="pipeline-step">T5 Encoder</div>
+                    <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="pipeline-step">Rectified Flow DiT</div>
+                    <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="pipeline-step">VAE Latents</div>
+                    <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="pipeline-step">VAE Decoder</div>
+                    <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+                    <div class="pipeline-step">Full-Band RIR</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3>Key Technical Components:</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-compress"></i> β-VAE Pipeline</h4>
+                        <p>ResBlock encoder and ConvNeXt+Transformer decoder for compact latent representations and band-limited to full-band upsampling.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-brain"></i> T5 Text Encoder</h4>
+                        <p>First-token pooling from T5-Large for optimal acoustic semantic understanding and text-to-reverb conditioning.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-water"></i> Rectified Flow DiT</h4>
+                        <p>Diffusion Transformer with rectified flow matching for stable latent generation with classifier-free guidance support.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-edit"></i> Caption-then-Rewrite</h4>
+                        <p>VLM captioning followed by LLM-based creative rewriting to generate diverse natural language training data.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3>Training Details:</h3>
+                <ul style="font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0 auto;">
+                    <li><strong>Dataset:</strong> 145,976 training samples from multiple sources (C4DM, RIRS NOISES, Image2Reverb, etc.)</li>
+                    <li><strong>Sample Rate:</strong> 48kHz full-band output with 22kHz latent training</li>
+                    <li><strong>Duration:</strong> 5-second standardized RIR length</li>
+                    <li><strong>Loss Function:</strong> Flow matching with pseudo-Huber penalty + β-VAE + adversarial losses</li>
+                    <li><strong>Architecture:</strong> Scalable DiT models from 213M (S) to 1.5B (XL) parameters</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="section">
+        <div class="container">
+            <h2 class="section-title">Results & Performance</h2>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="metric-value">8.8%</span>
+                    <p class="metric-label">Mean RT60 Error (XL, Long)</p>
+                </div>
+                <div class="result-card">
+                    <span class="metric-value">-0.75 dB</span>
+                    <p class="metric-label">VAE Reconstruction SNR</p>
+                </div>
+                <div class="result-card">
+                    <span class="metric-value">3.79/5</span>
+                    <p class="metric-label">Human Evaluation Score</p>
+                </div>
+                <div class="result-card">
+                    <span class="metric-value">62×</span>
+                    <p class="metric-label">Faster than Griffin-Lim</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3>Comparison with Baselines</h3>
+                <p style="text-align: center; margin-bottom: 2rem;">RT60 estimation accuracy across model scales (test set n=1957)</p>
+                <div style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #dee2e6;">Method</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #dee2e6;">Mean RT60 Error (%)</th>
+                                <th style="padding: 1rem; text-align: center; border-bottom: 2px solid #dee2e6;">Mean RT60 (s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;"><strong>Ground Truth</strong></td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6;">—</td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6;">3.299</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">Image2Reverb</td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6; color: #dc3545;"><strong>-37.0%</strong></td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6;">1.295</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;"><strong>PromptReverb XL, Long</strong></td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6; color: #28a745;"><strong>8.8%</strong></td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6;">2.189</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border-bottom: 1px solid #dee2e6;">PromptReverb XL, Short</td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6; color: #28a745;">4.8%</td>
+                                <td style="padding: 1rem; text-align: center; border-bottom: 1px solid #dee2e6;">2.044</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Section -->
+    <section id="code" class="section">
+        <div class="container">
+            <h2 class="section-title">Code & Implementation</h2>
+            
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 30px;" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+
+            <h3>Quick Start</h3>
+            <div class="code-block">
+                <pre><code># Clone the repository
+git clone https://github.com/ali-vosoughi/PromptReverb.git
+cd PromptReverb
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download pre-trained models
+python scripts/download_models.py
+
+# Generate RIR from text
+python inference.py --prompt "large cathedral with stone walls" --output cathedral.wav
+
+# Training (if you have your own dataset)
+python scripts/train.py --config configs/promptreverb_config.yaml</code></pre>
+            </div>
+
+            <h3>Python API Example</h3>
+            <div class="code-block">
+                <pre><code>from promptreverb import PromptReverbInference
+
+# Load pre-trained model
+model = PromptReverbInference("path/to/checkpoint.ckpt")
+
+# Generate RIR from text
+prompts = [
+    "large cathedral with long reverb tail",
+    "small intimate bedroom with carpet", 
+    "bright bathroom with tile reflections"
+]
+
+audio_outputs = model.generate_batch(prompts)
+
+# Save results
+for i, audio in enumerate(audio_outputs):
+    model.save_audio(audio, f"output_{i}.wav")</code></pre>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <h3>Key Files</h3>
+                <ul style="font-size: 1.1rem; line-height: 1.8; max-width: 600px;">
+                    <li><code>promptreverb/experiment.py</code> - Main model implementation</li>
+                    <li><code>promptreverb/flow_matching.py</code> - Rectified flow DiT model</li>
+                    <li><code>promptreverb/vae.py</code> - Variational autoencoder architecture</li>
+                    <li><code>promptreverb/dataset.py</code> - Data loading & preprocessing</li>
+                    <li><code>scripts/train.py</code> - Training script with resume support</li>
+                    <li><code>configs/promptreverb_config.yaml</code> - Configuration</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/ali-vosoughi/PromptReverb" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#" target="_blank"><i class="fas fa-file-alt"></i> Paper</a>
+                <a href="mailto:contact@promptreverb.com"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+            <p>&copy; 2024 PromptReverb. All rights reserved.</p>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 1rem;">
+                Built with ❤️ for spatial audio generation
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data structure - you'll need to populate this with your actual data
+        const sampleData = [
+            {
+                id: "000_252_9",
+                image: "assets/000_252_9/original_image.jpg",
+                longPrompt: "", // Will be loaded from long_description.txt
+                shortPrompt: "", // Will be loaded from short_description.txt
+                dryAudio: "assets/000_252_9/dry_audio.wav",
+                groundTruthWet: "assets/000_252_9/ground_truth_wet.wav",
+                image2reverbWet: "assets/000_252_9/image2reverb_wet.wav",
+                promptreverbLongWet: "assets/000_252_9/text2reverb_long_wet.wav"
+            }
+            // Add more samples as needed
+        ];
+
+        // Function to load text content
+        async function loadTextFile(url) {
+            try {
+                const response = await fetch(url);
+                return await response.text();
+            } catch (error) {
+                console.error('Error loading text file:', error);
+                return 'Description not available';
+            }
+        }
+
+        // Function to create sample card HTML
+        function createSampleCard(sample) {
+            return `
+                <div class="sample-card">
+                    <img src="${sample.image}" alt="Room Image" class="sample-image" onerror="this.style.display='none'">
+                    <div class="sample-content">
+                        <div class="sample-prompt">
+                            <strong>Prompt:</strong> <span id="prompt-${sample.id}">Loading...</span>
+                        </div>
+                        
+                        <div class="audio-section">
+                            <div class="audio-label">🎵 Dry Audio</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.dryAudio}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">🎯 Ground Truth</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.groundTruthWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">📷 Image2Reverb</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.image2reverbWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">✨ PromptReverb (Ours)</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.promptreverbLongWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to load and display samples
+        async function loadSamples() {
+            const sampleGrid = document.getElementById('sampleGrid');
+            
+            for (const sample of sampleData) {
+                // Create the card
+                sampleGrid.innerHTML += createSampleCard(sample);
+                
+                // Load the long description
+                try {
+                    const longPrompt = await loadTextFile(`assets/${sample.id}/long_description.txt`);
+                    document.getElementById(`prompt-${sample.id}`).textContent = longPrompt.trim();
+                } catch (error) {
+                    document.getElementById(`prompt-${sample.id}`).textContent = 'Description not available';
+                }
+            }
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(el);
+        });
+
+        // Active navigation highlighting
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id], header[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.opacity = link.getAttribute('href') === `#${current}` ? '1' : '0.7';
+            });
+        });
+
+        // Load samples when page loads
+        document.addEventListener('DOMContentLoaded', loadSamples);
+    </script>
+</body>
+</html>
