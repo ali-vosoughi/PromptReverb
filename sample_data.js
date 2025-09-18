@@ -25,14 +25,6 @@ window.generatedSampleData = [
         promptreverbLongWet: "assets/002_219_4/text2reverb_long_wet.wav"
     },
     {
-        id: "003_223_68",
-        image: "assets/003_223_68/original_image.jpg",
-        dryAudio: "assets/003_223_68/dry_audio.wav",
-        groundTruthWet: "assets/003_223_68/ground_truth_wet.wav",
-        image2reverbWet: "assets/003_223_68/image2reverb_wet.wav",
-        promptreverbLongWet: "assets/003_223_68/text2reverb_long_wet.wav"
-    },
-    {
         id: "004_210_22",
         image: "assets/004_210_22/original_image.jpg",
         dryAudio: "assets/004_210_22/dry_audio.wav",
@@ -233,14 +225,6 @@ window.generatedSampleData = [
         promptreverbLongWet: "assets/028_210_20/text2reverb_long_wet.wav"
     },
     {
-        id: "029_223_85",
-        image: "assets/029_223_85/original_image.jpg",
-        dryAudio: "assets/029_223_85/dry_audio.wav",
-        groundTruthWet: "assets/029_223_85/ground_truth_wet.wav",
-        image2reverbWet: "assets/029_223_85/image2reverb_wet.wav",
-        promptreverbLongWet: "assets/029_223_85/text2reverb_long_wet.wav"
-    },
-    {
         id: "030_240_1",
         image: "assets/030_240_1/original_image.jpg",
         dryAudio: "assets/030_240_1/dry_audio.wav",
@@ -257,3 +241,4 @@ window.generatedSampleData = [
         promptreverbLongWet: "assets/031_232_14/text2reverb_long_wet.wav"
     },
 ];
+
