@@ -290,8 +290,46 @@
             margin-top: 0.5rem;
         }
 
-        /* Footer */
-        .footer {
+        /* Author links */
+        .author-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .author-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Citation section */
+        .citation-section {
+            background: #2c3e50;
+            padding: 2rem 0;
+            margin-top: 0;
+        }
+
+        .citation-box {
+            background: #34495e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border-left: 4px solid #3498db;
+        }
+
+        .citation-title {
+            color: #ecf0f1;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
             background: #333;
             color: white;
             padding: 3rem 0;
@@ -377,6 +415,25 @@
         <div class="container">
             <h1 class="fade-in">PromptReverb</h1>
             <p class="fade-in">Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching</p>
+            
+            <!-- Authors Section -->
+            <div class="authors-section fade-in" style="margin: 2rem 0;">
+                <div class="authors-grid" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem;">
+                    <a href="https://alivosoughi.com" target="_blank" class="author-link">Ali Vosoughi¹⁺</a>
+                    <a href="https://github.com/yongyizang" target="_blank" class="author-link">Yongyi Zang²⁺</a>
+                    <a href="https://isaacyqh.github.io/" target="_blank" class="author-link">Qihui Yang³†</a>
+                    <a href="https://profiles.stanford.edu/nathan-paek" target="_blank" class="author-link">Nathan Paek⁴†</a>
+                    <a href="https://ccrma.stanford.edu/~randal/" target="_blank" class="author-link">Randal Leistikow²</a>
+                    <a href="https://www.cs.rochester.edu/~cxu22/" target="_blank" class="author-link">Chenliang Xu¹</a>
+                </div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem;">
+                    ¹University of Rochester, ²Smule Labs, ³UC San Diego, ⁴Stanford University
+                </div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">
+                    †Work done during internship at Smule Labs | ⁺These authors contributed equally
+                </div>
+            </div>
+            
             <div class="cta-buttons fade-in">
                 <a href="#samples" class="btn btn-primary">
                     <i class="fas fa-play"></i> Listen to Samples
@@ -625,6 +682,27 @@ for i, audio in enumerate(audio_outputs):
         </div>
     </section>
 
+    <!-- Citation Section -->
+    <section class="citation-section">
+        <div class="container">
+            <h2 class="citation-title" style="text-align: center; color: #ecf0f1;">Citation</h2>
+            <div class="citation-box">
+                <div style="color: #ecf0f1;">
+                    <strong>BibTeX:</strong>
+                </div>
+                <div style="color: #bdc3c7; margin-top: 0.5rem;">
+@misc{vosoughi2024promptreverb,<br>
+&nbsp;&nbsp;title={Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},<br>
+&nbsp;&nbsp;author={Ali Vosoughi and Yongyi Zang and Qihui Yang and Nathan Paek and Randal Leistikow and Chenliang Xu},<br>
+&nbsp;&nbsp;year={2024},<br>
+&nbsp;&nbsp;url={https://github.com/ali-vosoughi/PromptReverb},<br>
+&nbsp;&nbsp;note={Audio samples available at: https://ali-vosoughi.github.io/PromptReverb}<br>
+}
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -641,20 +719,34 @@ for i, audio in enumerate(audio_outputs):
     </footer>
 
     <script>
-        // Sample data structure - you'll need to populate this with your actual data
-        const sampleData = [
-            {
-                id: "000_252_9",
-                image: "assets/000_252_9/original_image.jpg",
-                longPrompt: "", // Will be loaded from long_description.txt
-                shortPrompt: "", // Will be loaded from short_description.txt
-                dryAudio: "assets/000_252_9/dry_audio.wav",
-                groundTruthWet: "assets/000_252_9/ground_truth_wet.wav",
-                image2reverbWet: "assets/000_252_9/image2reverb_wet.wav",
-                promptreverbLongWet: "assets/000_252_9/text2reverb_long_wet.wav"
-            }
-            // Add more samples as needed
-        ];
+        // Load sample data from external file
+        let sampleData = [];
+        
+        // If sample_data.js is loaded, use it; otherwise use fallback
+        if (typeof window.generatedSampleData !== 'undefined') {
+            sampleData = window.generatedSampleData;
+        } else {
+            // Fallback data structure for your 31 complete samples
+            const sampleIds = [
+                "000_252_9", "001_193_1", "002_219_4", "003_223_68", "004_210_22", 
+                "005_262_10", "006_227_17", "007_201_6", "008_231_31", "009_239_44",
+                "010_212_19", "011_224_130", "012_220_58", "013_214_4", "014_254_20",
+                "015_241_9", "016_227_18", "017_247_1", "018_231_10", "019_223_91",
+                "020_227_78", "021_193_2", "022_255_37", "023_243_9", "024_220_6",
+                "025_230_19", "026_224_59", "027_223_79", "028_210_20", "029_223_85",
+                "030_240_1"
+                // Note: 031_232_14 excluded due to missing files
+            ];
+            
+            sampleData = sampleIds.map(id => ({
+                id: id,
+                image: `assets/${id}/original_image.jpg`,
+                dryAudio: `assets/${id}/dry_audio.wav`,
+                groundTruthWet: `assets/${id}/ground_truth_wet.wav`,
+                image2reverbWet: `assets/${id}/image2reverb_wet.wav`,
+                promptreverbLongWet: `assets/${id}/text2reverb_long_wet.wav`
+            }));
+        }
 
         // Function to load text content
         async function loadTextFile(url) {
