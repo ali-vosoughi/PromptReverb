@@ -306,6 +306,27 @@
             transform: translateY(-2px);
         }
 
+        /* Announcement banner */
+        .announcement-banner {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            margin: 0 auto;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .announcement-content {
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .announcement-content i {
+            margin-right: 0.5rem;
+        }
+
         /* Citation section */
         .citation-section {
             background: #2c3e50;
@@ -442,6 +463,14 @@
                     <i class="fab fa-github"></i> View Code
                 </a>
             </div>
+            
+            <!-- Model Release Announcement -->
+            <div class="announcement-banner fade-in" style="margin-top: 2rem;">
+                <div class="announcement-content">
+                    <i class="fas fa-rocket"></i>
+                    <strong>Coming Soon:</strong> We will release inference weights and pre-trained models in 4 sizes (S, B, L, XL) — stay tuned!
+                </div>
+            </div>
         </div>
     </header>
 
@@ -469,7 +498,7 @@
                         <i class="fas fa-language"></i>
                     </div>
                     <h3>Natural Language Control</h3>
-                    <p>First method to synthesize complete RIRs from free-form textual descriptions using T5-based text encoding</p>
+                    <p>First method to synthesize complete RIRs from free-form textual descriptions using CLAP-based text encoding</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
@@ -506,7 +535,7 @@
                 <div class="pipeline-flow">
                     <div class="pipeline-step">Text Input</div>
                     <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
-                    <div class="pipeline-step">T5 Encoder</div>
+                    <div class="pipeline-step">CLAP Encoder</div>
                     <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
                     <div class="pipeline-step">Rectified Flow DiT</div>
                     <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
@@ -526,8 +555,8 @@
                         <p>ResBlock encoder and ConvNeXt+Transformer decoder for compact latent representations and band-limited to full-band upsampling.</p>
                     </div>
                     <div class="feature-card">
-                        <h4><i class="fas fa-brain"></i> T5 Text Encoder</h4>
-                        <p>First-token pooling from T5-Large for optimal acoustic semantic understanding and text-to-reverb conditioning.</p>
+                        <h4><i class="fas fa-brain"></i> CLAP Text Encoder</h4>
+                        <p>Audio-language understanding from CLAP for optimal acoustic semantic understanding and text-to-reverb conditioning.</p>
                     </div>
                     <div class="feature-card">
                         <h4><i class="fas fa-water"></i> Rectified Flow DiT</h4>
@@ -620,64 +649,40 @@
     <!-- Code Section -->
     <section id="code" class="section">
         <div class="container">
-            <h2 class="section-title">Code & Implementation</h2>
+            <h2 class="section-title">Code & Repository</h2>
             
             <div style="text-align: center; margin-bottom: 3rem;">
                 <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 30px;" target="_blank">
-                    <i class="fab fa-github"></i> View on GitHub
+                    <i class="fab fa-github"></i> View Repository
                 </a>
             </div>
 
-            <h3>Quick Start</h3>
-            <div class="code-block">
-                <pre><code># Clone the repository
-git clone https://github.com/ali-vosoughi/PromptReverb.git
-cd PromptReverb
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Download pre-trained models
-python scripts/download_models.py
-
-# Generate RIR from text
-python inference.py --prompt "large cathedral with stone walls" --output cathedral.wav
-
-# Training (if you have your own dataset)
-python scripts/train.py --config configs/promptreverb_config.yaml</code></pre>
-            </div>
-
-            <h3>Python API Example</h3>
-            <div class="code-block">
-                <pre><code>from promptreverb import PromptReverbInference
-
-# Load pre-trained model
-model = PromptReverbInference("path/to/checkpoint.ckpt")
-
-# Generate RIR from text
-prompts = [
-    "large cathedral with long reverb tail",
-    "small intimate bedroom with carpet", 
-    "bright bathroom with tile reflections"
-]
-
-audio_outputs = model.generate_batch(prompts)
-
-# Save results
-for i, audio in enumerate(audio_outputs):
-    model.save_audio(audio, f"output_{i}.wav")</code></pre>
-            </div>
-
-            <div style="margin-top: 3rem;">
-                <h3>Key Files</h3>
-                <ul style="font-size: 1.1rem; line-height: 1.8; max-width: 600px;">
-                    <li><code>promptreverb/experiment.py</code> - Main model implementation</li>
-                    <li><code>promptreverb/flow_matching.py</code> - Rectified flow DiT model</li>
-                    <li><code>promptreverb/vae.py</code> - Variational autoencoder architecture</li>
-                    <li><code>promptreverb/dataset.py</code> - Data loading & preprocessing</li>
-                    <li><code>scripts/train.py</code> - Training script with resume support</li>
-                    <li><code>configs/promptreverb_config.yaml</code> - Configuration</li>
-                </ul>
+            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                <div style="background: white; border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h3 style="color: #667eea; margin-bottom: 1.5rem;">
+                        <i class="fas fa-code"></i> Implementation Details
+                    </h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 1.5rem;">
+                        The complete implementation, training scripts, and model architectures are available in our GitHub repository. 
+                        The codebase includes the two-stage VAE architecture, rectified flow matching implementation, 
+                        and our caption-then-rewrite pipeline for generating diverse text conditioning data.
+                    </p>
+                    <p style="font-size: 1rem; color: #666; font-style: italic;">
+                        <i class="fas fa-clock"></i> This work is currently under review.
+                    </p>
+                </div>
+                
+                <div style="background: #f8f9fa; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
+                    <h4 style="margin-bottom: 1rem; color: #333;">Repository Contents</h4>
+                    <ul style="font-size: 1rem; line-height: 1.8; max-width: 500px; margin: 0 auto; text-align: left; color: #555;">
+                        <li>Two-stage VAE architecture implementation</li>
+                        <li>Rectified flow matching with DiT backbone</li>
+                        <li>CLAP text encoder integration</li>
+                        <li>Training scripts and configuration files</li>
+                        <li>Data preprocessing and caption generation pipeline</li>
+                        <li>Evaluation metrics and comparison tools</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
