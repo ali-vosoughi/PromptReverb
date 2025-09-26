@@ -351,6 +351,8 @@
             font-size: 1.2rem;
             font-weight: 600;
         }
+
+        .footer {
             background: #333;
             color: white;
             padding: 3rem 0;
@@ -723,15 +725,24 @@
         </div>
     </footer>
 
+    <!-- Load external JS file if present -->
+    <script src="sample_data.js"></script>
+    
     <script>
+        // Define samples to exclude
+        const excludedSamples = ["003_223_68", "029_223_85"];
+        
         // Load sample data from external file
         let sampleData = [];
         
         // If sample_data.js is loaded, use it; otherwise use fallback
         if (typeof window.generatedSampleData !== 'undefined') {
-            sampleData = window.generatedSampleData;
+            // Filter out excluded samples from external data
+            sampleData = window.generatedSampleData.filter(sample => 
+                !excludedSamples.includes(sample.id)
+            );
         } else {
-            // Fallback data structure for samples
+            // Fallback data structure - already corrected to exclude problematic samples
             const sampleIds = [
                 "000_252_9", "001_193_1", "002_219_4", "004_210_22", "005_262_10", 
                 "006_227_17", "007_201_6", "008_231_31", "009_239_44", "010_212_19",
@@ -739,35 +750,41 @@
                 "016_227_18", "017_247_1", "018_231_10", "019_223_91", "020_227_78",
                 "021_193_2", "022_255_37", "023_243_9", "024_220_6", "025_230_19",
                 "026_224_59", "027_223_79", "028_210_20", "030_240_1", "031_232_14"
-                // Note: 003_223_68 and 029_223_85 are excluded due to missing files
             ];
             
-            sampleData = sampleIds.map(id => ({
-                id: id,
-                image: `assets/${id}/original_image.jpg`,
-                dryAudio: `assets/${id}/dry_audio.wav`,
-                groundTruthWet: `assets/${id}/ground_truth_wet.wav`,
-                image2reverbWet: `assets/${id}/image2reverb_wet.wav`,
-                promptreverbLongWet: `assets/${id}/text2reverb_long_wet.wav`
-            }));
+            // Create sample data and filter out excluded ones
+            sampleData = sampleIds
+                .filter(id => !excludedSamples.includes(id))
+                .map(id => ({
+                    id: id,
+                    image: `assets/${id}/original_image.jpg`,
+                    dryAudio: `assets/${id}/dry_audio.wav`,
+                    groundTruthWet: `assets/${id}/ground_truth_wet.wav`,
+                    image2reverbWet: `assets/${id}/image2reverb_wet.wav`,
+                    promptreverbLongWet: `assets/${id}/text2reverb_long_wet.wav`
+                }));
         }
 
         // Function to load text content
         async function loadTextFile(url) {
             try {
                 const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('File not found');
+                }
                 return await response.text();
             } catch (error) {
                 console.error('Error loading text file:', error);
-                return 'Description not available';
+                return null;
             }
         }
 
         // Function to create sample card HTML
         function createSampleCard(sample) {
             return `
-                <div class="sample-card">
-                    <img src="${sample.image}" alt="Room Image" class="sample-image" onerror="this.style.display='none'">
+                <div class="sample-card" data-sample-id="${sample.id}">
+                    <img src="${sample.image}" alt="Room Image" class="sample-image" 
+                         onerror="this.style.display='none'">
                     <div class="sample-content">
                         <div class="sample-prompt">
                             <strong>Prompt:</strong> <span id="prompt-${sample.id}">Loading...</span>
@@ -814,15 +831,17 @@
             const sampleGrid = document.getElementById('sampleGrid');
             
             for (const sample of sampleData) {
-                // Create the card
-                sampleGrid.innerHTML += createSampleCard(sample);
+                // Load the long description first
+                const longPrompt = await loadTextFile(`assets/${sample.id}/long_description.txt`);
                 
-                // Load the long description
-                try {
-                    const longPrompt = await loadTextFile(`assets/${sample.id}/long_description.txt`);
+                // Only add the card if the description exists
+                if (longPrompt && longPrompt.trim()) {
+                    // Create and add the card
+                    sampleGrid.innerHTML += createSampleCard(sample);
                     document.getElementById(`prompt-${sample.id}`).textContent = longPrompt.trim();
-                } catch (error) {
-                    document.getElementById(`prompt-${sample.id}`).textContent = 'Description not available';
+                } else {
+                    // Skip samples without descriptions
+                    console.log(`Skipping sample ${sample.id} - no description available`);
                 }
             }
         }
