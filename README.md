@@ -1,7 +1,23 @@
-# PromptReverb
+# PromptReverb: Text-to-Reverb Generation
 
-Thank you for your interest in our work!
+**First system generating full-band (48 kHz) room impulse responses from natural language.**
 
-We plan to release the inference weights in **late October 2025**—stay tuned!
+[Demo & Audio Examples](https://ali-vosoughi.github.io/PromptReverb/)
 
-For more information, visit our [website](https://ali-vosoughi.github.io/PromptReverb/).
+---
+
+**Inference weights releasing [Around November 2025]**
+
+Work conducted across University of Rochester, Smule Labs, UC San Diego, and Stanford.
+
+Paper under review.
+
+---
+
+## Authors
+
+Ali Vosoughi, Yongyi Zang, Qihui Yang, Nathan Paek, Randal Leistikow, Chenliang Xu
+
+---
+
+[Citation details available upon publication]
