@@ -308,12 +308,19 @@
 
         /* Announcement banner */
         .announcement-banner {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
             border-radius: 50px;
             padding: 1rem 2rem;
             margin: 0 auto;
-            max-width: 600px;
+            max-width: 700px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .announcement-banner.acceptance {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .announcement-banner.release {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
         }
 
         .announcement-content {
@@ -330,7 +337,7 @@
         /* Citation section */
         .citation-section {
             background: #2c3e50;
-            padding: 2rem 0;
+            padding: 3rem 0;
             margin-top: 0;
         }
 
@@ -343,6 +350,7 @@
             font-size: 0.9rem;
             line-height: 1.6;
             border-left: 4px solid #3498db;
+            position: relative;
         }
 
         .citation-title {
@@ -350,6 +358,33 @@
             margin-bottom: 1rem;
             font-size: 1.2rem;
             font-weight: 600;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .copy-button.copied {
+            background: #27ae60;
         }
 
         .footer {
@@ -397,6 +432,13 @@
             .pipeline-arrow {
                 transform: rotate(90deg);
             }
+
+            .copy-button {
+                position: static;
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* Animations */
@@ -425,6 +467,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
+                <li><a href="#citation">Citation</a></li>
                 <li><a href="#samples">Samples</a></li>
                 <li><a href="#method">Method</a></li>
                 <li><a href="#results">Results</a></li>
@@ -457,8 +500,19 @@
                 </div>
             </div>
             
+            <!-- ICASSP Acceptance Announcement -->
+            <div class="announcement-banner acceptance fade-in" style="margin-bottom: 1rem;">
+                <div class="announcement-content">
+                    <i class="fas fa-trophy"></i>
+                    <strong>Accepted at ICASSP 2026</strong> — International Conference on Acoustics, Speech, and Signal Processing
+                </div>
+            </div>
+            
             <div class="cta-buttons fade-in">
-                <a href="#samples" class="btn btn-primary">
+                <a href="#citation" class="btn btn-primary">
+                    <i class="fas fa-quote-right"></i> Cite This Work
+                </a>
+                <a href="#samples" class="btn btn-secondary">
                     <i class="fas fa-play"></i> Listen to Samples
                 </a>
                 <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-secondary" target="_blank">
@@ -467,7 +521,7 @@
             </div>
             
             <!-- Model Release Announcement -->
-            <div class="announcement-banner fade-in" style="margin-top: 2rem;">
+            <div class="announcement-banner release fade-in" style="margin-top: 1.5rem;">
                 <div class="announcement-content">
                     <i class="fas fa-rocket"></i>
                     <strong>Coming Soon:</strong> We will release inference weights and pre-trained models in 4 sizes (S, B, L, XL) — stay tuned!
@@ -475,6 +529,43 @@
             </div>
         </div>
     </header>
+
+    <!-- Citation Section (Moved Up) -->
+    <section id="citation" class="citation-section">
+        <div class="container">
+            <h2 class="citation-title" style="text-align: center; color: #ecf0f1; font-size: 2.5rem; margin-bottom: 2rem;">Citation</h2>
+            <p style="text-align: center; color: #bdc3c7; font-size: 1.1rem; margin-bottom: 2rem;">
+                If you use PromptReverb in your research, please cite our ICASSP 2026 paper:
+            </p>
+            <div class="citation-box">
+                <button class="copy-button" onclick="copyCitation()">
+                    <i class="fas fa-copy"></i>
+                    <span id="copy-text">Copy BibTeX</span>
+                </button>
+                <div style="color: #ecf0f1; margin-bottom: 0.5rem;">
+                    <strong>BibTeX:</strong>
+                </div>
+                <div id="bibtex-content" style="color: #bdc3c7; margin-top: 0.5rem;">
+@inproceedings{vosoughi2026promptreverb,<br>
+&nbsp;&nbsp;title={Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},<br>
+&nbsp;&nbsp;author={Ali Vosoughi and Yongyi Zang and Qihui Yang and Nathan Paek and Randal Leistikow and Chenliang Xu},<br>
+&nbsp;&nbsp;booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},<br>
+&nbsp;&nbsp;year={2026},<br>
+&nbsp;&nbsp;organization={IEEE}<br>
+}
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <p style="color: #ecf0f1; font-size: 1rem;">
+                    <i class="fas fa-link"></i> Project Page: <a href="https://ali-vosoughi.github.io/PromptReverb" style="color: #3498db; text-decoration: none;">https://ali-vosoughi.github.io/PromptReverb</a>
+                </p>
+                <p style="color: #ecf0f1; font-size: 1rem; margin-top: 0.5rem;">
+                    <i class="fab fa-github"></i> Code: <a href="https://github.com/ali-vosoughi/PromptReverb" style="color: #3498db; text-decoration: none;">https://github.com/ali-vosoughi/PromptReverb</a>
+                </p>
+            </div>
+        </div>
+    </section>
 
     <!-- Features Section -->
     <section class="section">
@@ -669,9 +760,6 @@
                         The codebase includes the two-stage VAE architecture, rectified flow matching implementation, 
                         and our caption-then-rewrite pipeline for generating diverse text conditioning data.
                     </p>
-                    <p style="font-size: 1rem; color: #666; font-style: italic;">
-                        <i class="fas fa-clock"></i> This work is currently under review.
-                    </p>
                 </div>
                 
                 <div style="background: #f8f9fa; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
@@ -689,36 +777,15 @@
         </div>
     </section>
 
-    <!-- Citation Section -->
-    <section class="citation-section">
-        <div class="container">
-            <h2 class="citation-title" style="text-align: center; color: #ecf0f1;">Citation</h2>
-            <div class="citation-box">
-                <div style="color: #ecf0f1;">
-                    <strong>BibTeX:</strong>
-                </div>
-                <div style="color: #bdc3c7; margin-top: 0.5rem;">
-@misc{vosoughi2024promptreverb,<br>
-&nbsp;&nbsp;title={Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},<br>
-&nbsp;&nbsp;author={Ali Vosoughi and Yongyi Zang and Qihui Yang and Nathan Paek and Randal Leistikow and Chenliang Xu},<br>
-&nbsp;&nbsp;year={2024},<br>
-&nbsp;&nbsp;url={https://github.com/ali-vosoughi/PromptReverb},<br>
-&nbsp;&nbsp;note={Audio samples available at: https://ali-vosoughi.github.io/PromptReverb}<br>
-}
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-links">
                 <a href="https://github.com/ali-vosoughi/PromptReverb" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#" target="_blank"><i class="fas fa-file-alt"></i> Paper</a>
+                <a href="#citation"><i class="fas fa-quote-right"></i> Citation</a>
                 <a href="mailto:contact@promptreverb.com"><i class="fas fa-envelope"></i> Contact</a>
             </div>
-            <p>&copy; 2024 PromptReverb. All rights reserved.</p>
+            <p>&copy; 2026 PromptReverb. All rights reserved.</p>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 1rem;">
                 Built with ❤️ for spatial audio generation
             </p>
@@ -729,6 +796,31 @@
     <script src="sample_data.js"></script>
     
     <script>
+        // Copy citation function
+        function copyCitation() {
+            const bibtexText = `@inproceedings{vosoughi2026promptreverb,
+  title={Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},
+  author={Ali Vosoughi and Yongyi Zang and Qihui Yang and Nathan Paek and Randal Leistikow and Chenliang Xu},
+  booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  year={2026},
+  organization={IEEE}
+}`;
+            
+            navigator.clipboard.writeText(bibtexText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const buttonText = document.getElementById('copy-text');
+                button.classList.add('copied');
+                buttonText.textContent = 'Copied!';
+                
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    buttonText.textContent = 'Copy BibTeX';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
         // Define samples to exclude
         const excludedSamples = ["003_223_68", "029_223_85"];
         
