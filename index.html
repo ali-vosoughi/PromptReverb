@@ -524,13 +524,7 @@
             </p>
             
             <div class="sample-grid" id="sampleGrid">
-                <!-- Loading indicator -->
-                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
-                    <div style="display: inline-block;">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #667eea;"></i>
-                        <p style="margin-top: 1rem; color: #666;">Loading audio samples...</p>
-                    </div>
-                </div>
+                <!-- Samples will be loaded dynamically -->
             </div>
         </div>
     </section>
@@ -800,70 +794,71 @@
             `;
         }
 
+        // Function to create sample card HTML
+        function createSampleCard(sample) {
+            return `
+                <div class="sample-card" data-sample-id="${sample.id}">
+                    <img src="${sample.image}" alt="Room Image" class="sample-image" 
+                         onerror="this.style.display='none'">
+                    <div class="sample-content">
+                        <div class="sample-prompt">
+                            <strong>Prompt:</strong> <span id="prompt-${sample.id}">Loading...</span>
+                        </div>
+                        
+                        <div class="audio-section">
+                            <div class="audio-label">🎵 Dry Audio</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.dryAudio}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">🎯 Ground Truth</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.groundTruthWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">📷 Image2Reverb</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.image2reverbWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+
+                        <div class="audio-section">
+                            <div class="audio-label">✨ PromptReverb (Ours)</div>
+                            <audio controls class="audio-player">
+                                <source src="${sample.promptreverbLongWet}" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         // Function to load and display samples
         async function loadSamples() {
             const sampleGrid = document.getElementById('sampleGrid');
-            const validSamples = [];
             
-            // First, collect all valid samples
             for (const sample of sampleData) {
+                // Load the long description first
                 const longPrompt = await loadTextFile(`assets/${sample.id}/long_description.txt`);
+                
+                // Only add the card if the description exists
                 if (longPrompt && longPrompt.trim()) {
-                    validSamples.push({
-                        ...sample,
-                        prompt: longPrompt.trim()
-                    });
+                    // Create and add the card
+                    sampleGrid.innerHTML += createSampleCard(sample);
+                    document.getElementById(`prompt-${sample.id}`).textContent = longPrompt.trim();
+                } else {
+                    // Skip samples without descriptions
+                    console.log(`Skipping sample ${sample.id} - no description available`);
                 }
             }
-            
-            // Then render all at once to minimize layout shifts
-            const cardsHTML = validSamples.map(sample => {
-                return `
-                    <div class="sample-card" data-sample-id="${sample.id}">
-                        <img src="${sample.image}" alt="Room Image" class="sample-image" 
-                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22200%22/%3E%3C/svg%3E'">
-                        <div class="sample-content">
-                            <div class="sample-prompt">
-                                <strong>Prompt:</strong> <span>${sample.prompt}</span>
-                            </div>
-                            
-                            <div class="audio-section">
-                                <div class="audio-label">🎵 Dry Audio</div>
-                                <audio controls class="audio-player" preload="none">
-                                    <source src="${sample.dryAudio}" type="audio/wav">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-
-                            <div class="audio-section">
-                                <div class="audio-label">🎯 Ground Truth</div>
-                                <audio controls class="audio-player" preload="none">
-                                    <source src="${sample.groundTruthWet}" type="audio/wav">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-
-                            <div class="audio-section">
-                                <div class="audio-label">📷 Image2Reverb</div>
-                                <audio controls class="audio-player" preload="none">
-                                    <source src="${sample.image2reverbWet}" type="audio/wav">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-
-                            <div class="audio-section">
-                                <div class="audio-label">✨ PromptReverb (Ours)</div>
-                                <audio controls class="audio-player" preload="none">
-                                    <source src="${sample.promptreverbLongWet}" type="audio/wav">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            sampleGrid.innerHTML = cardsHTML;
         }
 
         // Smooth scrolling for navigation
