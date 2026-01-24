@@ -308,19 +308,19 @@
 
         /* Announcement banner */
         .announcement-banner {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
+            background: linear-gradient(45deg, #28a745, #20c997);
             border-radius: 50px;
             padding: 1rem 2rem;
             margin: 0 auto;
-            max-width: 600px;
+            max-width: 700px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .announcement-content {
             color: white;
             text-align: center;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .announcement-content i {
@@ -442,8 +442,8 @@
             <!-- Authors Section -->
             <div class="authors-section fade-in" style="margin: 2rem 0;">
                 <div class="authors-grid" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem;">
-                    <a href="https://alivosoughi.com" target="_blank" class="author-link">Ali Vosoughi¹⁺</a>
-                    <a href="https://github.com/yongyizang" target="_blank" class="author-link">Yongyi Zang²⁺</a>
+                    <a href="https://alivosoughi.com" target="_blank" class="author-link">Ali Vosoughi¹*</a>
+                    <a href="https://github.com/yongyizang" target="_blank" class="author-link">Yongyi Zang²*</a>
                     <a href="https://isaacyqh.github.io/" target="_blank" class="author-link">Qihui Yang³†</a>
                     <a href="https://profiles.stanford.edu/nathan-paek" target="_blank" class="author-link">Nathan Paek⁴†</a>
                     <a href="https://ccrma.stanford.edu/~randal/" target="_blank" class="author-link">Randal Leistikow²</a>
@@ -453,7 +453,7 @@
                     ¹University of Rochester, ²Smule Labs, ³UC San Diego, ⁴Stanford University
                 </div>
                 <div style="font-size: 0.8rem; opacity: 0.8;">
-                    †Work done during internship at Smule Labs | ⁺These authors contributed equally
+                    *Equal contribution | †Work done during internship at Smule Labs
                 </div>
             </div>
             
@@ -461,16 +461,19 @@
                 <a href="#samples" class="btn btn-primary">
                     <i class="fas fa-play"></i> Listen to Samples
                 </a>
+                <a href="https://arxiv.org/pdf/2510.22439" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-file-pdf"></i> arXiv Paper
+                </a>
                 <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-secondary" target="_blank">
                     <i class="fab fa-github"></i> View Code
                 </a>
             </div>
             
-            <!-- Model Release Announcement -->
+            <!-- ICASSP 2026 Acceptance Announcement -->
             <div class="announcement-banner fade-in" style="margin-top: 2rem;">
                 <div class="announcement-content">
-                    <i class="fas fa-rocket"></i>
-                    <strong>Coming Soon:</strong> We will release inference weights and pre-trained models in 4 sizes (S, B, L, XL) — stay tuned!
+                    <i class="fas fa-trophy"></i>
+                    <strong>Accepted at ICASSP 2026</strong> — Barcelona, Spain
                 </div>
             </div>
         </div>
@@ -481,6 +484,13 @@
         <div class="container">
             <h2 class="section-title">Key Features</h2>
             <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h3>First Text-Only RIR Generation</h3>
+                    <p>First work to generate room impulse responses from text-only inputs, eliminating the need for audio references or other modalities</p>
+                </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
                         <i class="fas fa-compress-arrows-alt"></i>
@@ -494,13 +504,6 @@
                     </div>
                     <h3>Rectified Flow Matching</h3>
                     <p>Advanced flow-based generation with proper ODE integration using DiT architecture for high-quality reverb synthesis</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <h3>Natural Language Control</h3>
-                    <p>First method to synthesize complete RIRs from free-form textual descriptions using CLAP-based text encoding</p>
                 </div>
                 <div class="feature-card fade-in">
                     <div class="feature-icon">
@@ -669,9 +672,6 @@
                         The codebase includes the two-stage VAE architecture, rectified flow matching implementation, 
                         and our caption-then-rewrite pipeline for generating diverse text conditioning data.
                     </p>
-                    <p style="font-size: 1rem; color: #666; font-style: italic;">
-                        <i class="fas fa-clock"></i> This work is currently under review.
-                    </p>
                 </div>
                 
                 <div style="background: #f8f9fa; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
@@ -698,14 +698,21 @@
                     <strong>BibTeX:</strong>
                 </div>
                 <div style="color: #bdc3c7; margin-top: 0.5rem;">
-@misc{vosoughi2024promptreverb,<br>
-&nbsp;&nbsp;title={Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},<br>
-&nbsp;&nbsp;author={Ali Vosoughi and Yongyi Zang and Qihui Yang and Nathan Paek and Randal Leistikow and Chenliang Xu},<br>
-&nbsp;&nbsp;year={2024},<br>
-&nbsp;&nbsp;url={https://github.com/ali-vosoughi/PromptReverb},<br>
-&nbsp;&nbsp;note={Audio samples available at: https://ali-vosoughi.github.io/PromptReverb}<br>
+@inproceedings{vosoughi2026promptreverb,<br>
+&nbsp;&nbsp;title={PromptReverb: Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching},<br>
+&nbsp;&nbsp;author={Vosoughi, Ali and Zang, Yongyi and Yang, Qihui and Paek, Nathan and Leistikow, Randal and Xu, Chenliang},<br>
+&nbsp;&nbsp;booktitle={IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},<br>
+&nbsp;&nbsp;year={2026},<br>
+&nbsp;&nbsp;organization={IEEE},<br>
+&nbsp;&nbsp;address={Barcelona, Spain}<br>
 }
                 </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://arxiv.org/pdf/2510.22439" class="btn btn-secondary" target="_blank" style="display: inline-flex;">
+                    <i class="fas fa-file-pdf"></i> View Paper on arXiv
+                </a>
             </div>
         </div>
     </section>
@@ -715,10 +722,10 @@
         <div class="container">
             <div class="footer-links">
                 <a href="https://github.com/ali-vosoughi/PromptReverb" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a href="#" target="_blank"><i class="fas fa-file-alt"></i> Paper</a>
-                <a href="mailto:contact@promptreverb.com"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="https://arxiv.org/pdf/2510.22439" target="_blank"><i class="fas fa-file-alt"></i> arXiv Paper</a>
+                <a href="mailto:avosough@ur.rochester.edu"><i class="fas fa-envelope"></i> Contact</a>
             </div>
-            <p>&copy; 2024 PromptReverb. All rights reserved.</p>
+            <p>&copy; 2026 PromptReverb. All rights reserved.</p>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 1rem;">
                 Built with ❤️ for spatial audio generation
             </p>
