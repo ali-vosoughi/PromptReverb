@@ -431,7 +431,6 @@
                 <li><a href="#samples">Samples</a></li>
                 <li><a href="#method">Method</a></li>
                 <li><a href="#results">Results</a></li>
-                <li><a href="#code">Code</a></li>
             </ul>
         </div>
     </nav>
@@ -466,9 +465,6 @@
                 </a>
                 <a href="https://arxiv.org/pdf/2510.22439" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-file-pdf"></i> arXiv Paper
-                </a>
-                <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-secondary" target="_blank">
-                    <i class="fab fa-github"></i> View Code
                 </a>
             </div>
             
@@ -660,33 +656,6 @@
         </div>
     </section>
 
-    <!-- Code Section -->
-    <section id="code" class="section">
-        <div class="container">
-            <h2 class="section-title">Code & Repository</h2>
-            
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <a href="https://github.com/ali-vosoughi/PromptReverb" class="btn btn-primary" style="font-size: 1.2rem; padding: 15px 30px;" target="_blank">
-                    <i class="fab fa-github"></i> View Repository
-                </a>
-            </div>
-
-            <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <div style="background: #f8f9fa; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
-                    <h4 style="margin-bottom: 1rem; color: #333;">Repository Contents</h4>
-                    <ul style="font-size: 1rem; line-height: 1.8; max-width: 500px; margin: 0 auto; text-align: left; color: #555;">
-                        <li>Two-stage VAE architecture implementation</li>
-                        <li>Rectified flow matching with DiT backbone</li>
-                        <li>CLAP text encoder integration</li>
-                        <li>Training scripts and configuration files</li>
-                        <li>Data preprocessing and caption generation pipeline</li>
-                        <li>Evaluation metrics and comparison tools</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Citation Section -->
     <section class="citation-section">
         <div class="container">
@@ -721,7 +690,7 @@
             <div class="footer-links">
                 <a href="https://github.com/ali-vosoughi/PromptReverb" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                 <a href="https://arxiv.org/pdf/2510.22439" target="_blank"><i class="fas fa-file-alt"></i> arXiv Paper</a>
-                <a href="mailto:avosough@ur.rochester.edu"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="/cdn-cgi/l/email-protection#0c6d7a637f63796b644c797e227e636f64697f78697e22696879"><i class="fas fa-envelope"></i> Contact</a>
             </div>
             <p>&copy; 2026 PromptReverb. All rights reserved.</p>
             <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 1rem;">
@@ -731,7 +700,7 @@
     </footer>
 
     <!-- Load external JS file if present -->
-    <script src="sample_data.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="sample_data.js"></script>
     
     <script>
         // Define samples to exclude
@@ -949,11 +918,3 @@
 
             navLinks.forEach(link => {
                 link.style.opacity = link.getAttribute('href') === `#${current}` ? '1' : '0.7';
-            });
-        });
-
-        // Load samples when page loads
-        document.addEventListener('DOMContentLoaded', loadSamples);
-    </script>
-</body>
-</html>
