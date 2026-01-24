@@ -185,6 +185,8 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
+            background: #f0f0f0;
+            display: block;
         }
 
         .sample-content {
@@ -197,6 +199,7 @@
             border-radius: 8px;
             margin-bottom: 1rem;
             font-style: italic;
+            min-height: 80px;
         }
 
         .audio-section {
@@ -473,7 +476,7 @@
             <div class="announcement-banner fade-in" style="margin-top: 2rem;">
                 <div class="announcement-content">
                     <i class="fas fa-trophy"></i>
-                    <strong>Accepted at ICASSP 2026</strong> — Barcelona, Spain
+                    <strong>Accepted to appear at ICASSP 2026</strong> (IEEE International Conference on Acoustics, Speech and Signal Processing)
                 </div>
             </div>
         </div>
@@ -525,7 +528,13 @@
             </p>
             
             <div class="sample-grid" id="sampleGrid">
-                <!-- Samples will be loaded dynamically -->
+                <!-- Loading indicator -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <div style="display: inline-block;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #667eea;"></i>
+                        <p style="margin-top: 1rem; color: #666;">Loading audio samples...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -663,17 +672,6 @@
             </div>
 
             <div style="text-align: center; max-width: 800px; margin: 0 auto;">
-                <div style="background: white; border-radius: 15px; padding: 3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 2rem;">
-                    <h3 style="color: #667eea; margin-bottom: 1.5rem;">
-                        <i class="fas fa-code"></i> Implementation Details
-                    </h3>
-                    <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 1.5rem;">
-                        The complete implementation, training scripts, and model architectures are available in our GitHub repository. 
-                        The codebase includes the two-stage VAE architecture, rectified flow matching implementation, 
-                        and our caption-then-rewrite pipeline for generating diverse text conditioning data.
-                    </p>
-                </div>
-                
                 <div style="background: #f8f9fa; border-radius: 15px; padding: 2rem; box-shadow: 0 5px 20px rgba(0,0,0,0.05);">
                     <h4 style="margin-bottom: 1rem; color: #333;">Repository Contents</h4>
                     <ul style="font-size: 1rem; line-height: 1.8; max-width: 500px; margin: 0 auto; text-align: left; color: #555;">
@@ -836,21 +834,67 @@
         // Function to load and display samples
         async function loadSamples() {
             const sampleGrid = document.getElementById('sampleGrid');
+            const validSamples = [];
             
+            // First, collect all valid samples
             for (const sample of sampleData) {
-                // Load the long description first
                 const longPrompt = await loadTextFile(`assets/${sample.id}/long_description.txt`);
-                
-                // Only add the card if the description exists
                 if (longPrompt && longPrompt.trim()) {
-                    // Create and add the card
-                    sampleGrid.innerHTML += createSampleCard(sample);
-                    document.getElementById(`prompt-${sample.id}`).textContent = longPrompt.trim();
-                } else {
-                    // Skip samples without descriptions
-                    console.log(`Skipping sample ${sample.id} - no description available`);
+                    validSamples.push({
+                        ...sample,
+                        prompt: longPrompt.trim()
+                    });
                 }
             }
+            
+            // Then render all at once to minimize layout shifts
+            const cardsHTML = validSamples.map(sample => {
+                return `
+                    <div class="sample-card" data-sample-id="${sample.id}">
+                        <img src="${sample.image}" alt="Room Image" class="sample-image" 
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23f0f0f0%22 width=%22400%22 height=%22200%22/%3E%3C/svg%3E'">
+                        <div class="sample-content">
+                            <div class="sample-prompt">
+                                <strong>Prompt:</strong> <span>${sample.prompt}</span>
+                            </div>
+                            
+                            <div class="audio-section">
+                                <div class="audio-label">🎵 Dry Audio</div>
+                                <audio controls class="audio-player" preload="none">
+                                    <source src="${sample.dryAudio}" type="audio/wav">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+
+                            <div class="audio-section">
+                                <div class="audio-label">🎯 Ground Truth</div>
+                                <audio controls class="audio-player" preload="none">
+                                    <source src="${sample.groundTruthWet}" type="audio/wav">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+
+                            <div class="audio-section">
+                                <div class="audio-label">📷 Image2Reverb</div>
+                                <audio controls class="audio-player" preload="none">
+                                    <source src="${sample.image2reverbWet}" type="audio/wav">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+
+                            <div class="audio-section">
+                                <div class="audio-label">✨ PromptReverb (Ours)</div>
+                                <audio controls class="audio-player" preload="none">
+                                    <source src="${sample.promptreverbLongWet}" type="audio/wav">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            sampleGrid.innerHTML = cardsHTML;
         }
 
         // Smooth scrolling for navigation
