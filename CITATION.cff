@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use PromptReverb, please cite the paper below."
+title: "PromptReverb"
+authors:
+  - family-names: Vosoughi
+    given-names: Ali
+repository-code: "https://github.com/ali-vosoughi/PromptReverb"
+preferred-citation:
+  type: conference-paper
+  title: "PromptReverb: Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching"
+  authors:
+    - family-names: Vosoughi
+      given-names: Ali
+    - family-names: Zang
+      given-names: Yongyi
+    - family-names: Yang
+      given-names: Qihui
+    - family-names: Paek
+      given-names: Nathan
+    - family-names: Leistikow
+      given-names: Randal
+    - family-names: Xu
+      given-names: Chenliang
+  conference:
+    name: "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)"
+  year: 2026
