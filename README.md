@@ -1,8 +1,8 @@
 # PromptReverb: Multimodal Room Impulse Response Generation Through Latent Rectified Flow Matching
 
-**🎉  Accepted to appear at ICASSP 2026 (IEEE International Conference on Acoustics, Speech and Signal Processing)**
+**Accepted at ICASSP 2026 (IEEE International Conference on Acoustics, Speech and Signal Processing), oral presentation.**
 
-**First work to generate full-band (48 kHz) room impulse responses from text-only inputs.**
+**Generates full-band (48 kHz) room impulse responses from text-only inputs.**
 
 [Demo & Audio Examples](https://ali-vosoughi.github.io/PromptReverb/) | [arXiv Paper](https://arxiv.org/pdf/2510.22439)
 
