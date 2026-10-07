@@ -10,7 +10,7 @@
 
 ## Overview
 
-PromptReverb is the generates room impulse responses (RIRs) from text-only inputs.. Our system introduces a approach using multimodal latent rectified flow matching to produce high-quality, full-band (48 kHz) acoustic simulations from natural language descriptions alone, eliminating the need for audio references or other modalities.
+PromptReverb generates room impulse responses (RIRs) from text-only inputs. It uses multimodal latent rectified flow matching to produce full-band (48 kHz) acoustic simulations from natural-language descriptions alone, with no audio reference or other modality required.
 
 **Affiliations:** University of Rochester, Smule Labs, UC San Diego, Stanford University
 
